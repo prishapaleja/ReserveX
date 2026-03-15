@@ -1,0 +1,10 @@
+.mesh-bg {
+  background-color: #000000;
+  background-image: 
+    linear-gradient(to bottom right, #122566CC, #234ACDCC),
+    radial-gradient(circle at bottom right, #15D0EC66 0%, transparent 50%),
+    linear-gradient(90deg, rgba(255, 0, 0, 0.1) 1px, transparent 1px),
+    linear-gradient(rgba(255, 0, 0, 0.1) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 8px 8px, 8px 8px;
+  background-position: 0 0, 0 0, 0 0, 0 0;
+}
