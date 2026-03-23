@@ -1,0 +1,167 @@
+.dashboard-wrapper {
+  display: flex;
+  min-height: 100vh;
+  font-family: 'Courier New', Courier, monospace;
+  background-color: #b8c8e8;
+}
+
+.main-content {
+  flex: 1;
+  padding: 24px 28px;
+  overflow-y: auto;
+}
+
+/* ===== SECTION TITLES ===== */
+.section-title {
+  font-size: 22px;
+  color: #0a1a4a;
+  margin-bottom: 16px;
+  font-family: Georgia, serif;
+  font-weight: normal;
+}
+
+.section-title-sm {
+  font-size: 20px;
+  color: #0a1a4a;
+  font-family: Georgia, serif;
+  font-weight: normal;
+  margin: 0;
+}
+
+/* ===== HIGHLIGHTS ===== */
+.highlights-section {
+  margin-bottom: 28px;
+}
+
+.highlights-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.highlight-card {
+  background: linear-gradient(135deg, #1a3080 0%, #0d2060 100%);
+  border-radius: 16px;
+  padding: 20px 22px;
+  color: white;
+}
+
+.highlight-label {
+  font-size: 13px;
+  opacity: 0.8;
+  margin-bottom: 12px;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.highlight-number {
+  font-size: 52px;
+  font-family: Georgia, serif;
+  font-weight: normal;
+  line-height: 1;
+}
+
+.highlight-time-row {
+  font-size: 12px;
+  opacity: 0.7;
+  margin-bottom: 4px;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.highlight-time {
+  margin-right: 6px;
+}
+
+.highlight-subject {
+  opacity: 0.9;
+}
+
+.highlight-location {
+  font-size: 11px;
+  opacity: 0.6;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+/* ===== BOTTOM ROW ===== */
+.bottom-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.timetable-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.calendar-icon-box {
+  width: 28px;
+  height: 28px;
+  background-color: rgba(30, 80, 180, 0.3);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dark-card {
+  background: linear-gradient(135deg, #1a3080 0%, #0d2060 100%);
+  border-radius: 16px;
+  padding: 20px 22px;
+  min-height: 380px;
+}
+
+/* ===== TIMETABLE ===== */
+.timetable-row {
+  display: flex;
+  gap: 18px;
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.timetable-row:last-child {
+  padding-bottom: 0;
+  margin-bottom: 0;
+  border-bottom: none;
+}
+
+.timetable-time {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.55);
+  min-width: 60px;
+  font-family: 'Courier New', Courier, monospace;
+  padding-top: 1px;
+}
+
+.timetable-subject {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.9);
+  font-family: 'Courier New', Courier, monospace;
+  margin-bottom: 3px;
+}
+
+.timetable-location {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.45);
+  font-family: 'Courier New', Courier, monospace;
+}
+
+/* ===== NOTIFICATIONS ===== */
+.notifications-card {
+  background: linear-gradient(135deg, #1a3080 0%, #0d2060 100%);
+  border-radius: 16px;
+  padding: 20px 22px;
+  min-height: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.notification-pill {
+  background-color: rgba(100, 130, 210, 0.25);
+  border-radius: 10px;
+  height: 38px;
+  flex: 0 0 38px;
+}

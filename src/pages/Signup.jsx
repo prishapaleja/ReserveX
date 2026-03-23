@@ -33,8 +33,8 @@ const Signup = () => {
         throw new Error(data.message || 'Signup failed');
       }
 
-      alert('Signup successful! Please login.');
-      navigate('/login');
+      localStorage.setItem("token", data.accessToken);
+      navigate('/dashboard');
     } catch (err) {
       setError(err.message);
     } finally {
@@ -42,9 +42,8 @@ const Signup = () => {
     }
   };
 
-  // Using your exact Selection Colors and Opacities
   const backgroundStyle = {
-    backgroundColor: '#000000', // Base layer
+    backgroundColor: '#000000',
     backgroundImage: `
     radial-gradient(circle at 0% 0%, rgba(0, 0, 0, 1) 0%, transparent 40%),
       radial-gradient(circle at 35% 15%, rgba(35, 74, 205, 0.8) 0%, transparent 60%), 
@@ -66,7 +65,7 @@ const Signup = () => {
             className="mb-10" 
             style={{ width: '348px', height: '194px' }} 
           />
-          <div className="bg-[#6B85DD] rounded-3xl p-8 shadow-xl text-white w-[336px] h-[274px] flex flex-col justify-center">
+          <div className="bg-[#6B85DD] rounded-3xl p-8 shadow-xl text-white w-84 h-68.5 flex flex-col justify-center">
             <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
               {error && <p className="text-red-300 text-sm text-center bg-red-900/40 p-1 rounded">{error}</p>}
               <input

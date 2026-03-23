@@ -32,11 +32,9 @@ const Login = () => {
         throw new Error(data.message || 'Login failed');
       }
 
-      // In a real app, you would store the token (localStorage, context, etc.)
       console.log('Login successful, token:', data.accessToken);
-      
-      alert('Login successful!');
-      navigate('/'); // Redirect to a dashboard or home later
+      localStorage.setItem("token", data.accessToken);
+      navigate('/dashboard');
     } catch (err) {
       setError(err.message);
     } finally {
@@ -90,7 +88,7 @@ const Login = () => {
             className="mb-10 object-cover" 
             style={{ width: '294px', height: '294px' }} 
           />
-          <div className="bg-[#6B85DD] rounded-3xl p-8 shadow-xl text-white w-[336px] h-[274px] flex flex-col justify-center">
+          <div className="bg-[#6B85DD] rounded-3xl p-8 shadow-xl text-white w-84 h-68.5 flex flex-col justify-center">
             <form onSubmit={handleLogin} className="flex flex-col gap-6">
               {error && <p className="text-red-300 text-sm text-center bg-red-900/40 p-1 rounded">{error}</p>}
               

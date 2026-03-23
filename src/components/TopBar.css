@@ -1,0 +1,83 @@
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.topbar-search {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.4);
+  border-radius: 12px;
+  padding: 10px 16px;
+  gap: 10px;
+  backdrop-filter: blur(8px);
+}
+
+.topbar-search input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 13px;
+  color: rgba(30, 50, 120, 0.8);
+  font-family: 'Courier New', Courier, monospace;
+  flex: 1;
+}
+
+.topbar-search input::placeholder {
+  color: rgba(30, 50, 120, 0.5);
+}
+
+.topbar-icon-btn {
+  width: 42px;
+  height: 42px;
+  background-color: rgba(255, 255, 255, 0.4);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  border: none;
+  flex-shrink: 0;
+}
+
+.topbar-icon-btn:hover {
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+.topbar-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: rgba(255, 255, 255, 0.4);
+  border-radius: 12px;
+  padding: 8px 14px;
+  backdrop-filter: blur(8px);
+  flex-shrink: 0;
+}
+
+.topbar-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: rgba(30, 50, 120, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.topbar-name {
+  font-size: 13px;
+  font-weight: bold;
+  color: #0a1a4a;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.topbar-role {
+  font-size: 11px;
+  color: rgba(10, 26, 74, 0.6);
+  font-family: 'Courier New', Courier, monospace;
+}
