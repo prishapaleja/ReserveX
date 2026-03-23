@@ -1,0 +1,128 @@
+.mt-40 {
+  margin-top: 40px;
+}
+
+.section-header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.approvals-block {
+  display: flex;
+  flex-direction: column;
+}
+
+.requests-card.flex-row {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  padding: 24px;
+}
+
+.request-list {
+  flex: 1; 
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.request-pill {
+  height: 48px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px 0 20px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.request-pill:hover {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+}
+
+.request-pill.active {
+  background: linear-gradient(135deg, #15D0EC 0%, #0A98AD 100%);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 15px rgba(21, 208, 236, 0.3);
+}
+
+.pill-actions {
+  display: flex;
+  gap: 12px;
+  font-size: 14px;
+}
+
+.tick {
+  color: #1CDA66;
+  font-weight: bold;
+}
+
+.cross {
+  color: #FF4B4B;
+  font-weight: bold;
+}
+
+.pill-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  box-shadow: 0 0 8px currentColor;
+}
+
+.pill-dot.yellow { background: #FFE600; color: #FFE600; }
+.pill-dot.green { background: #1CDA66; color: #1CDA66; }
+.pill-dot.red { background: #FF4B4B; color: #FF4B4B; }
+
+.request-panel {
+  flex: 1.5; 
+  background: linear-gradient(135deg, #15D0EC 0%, #0A98AD 100%);
+  border-radius: 16px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; 
+  padding: 24px;
+}
+
+.panel-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+}
+
+.white-pill-btn {
+  background: #ffffff;
+  color: #1A3080;
+  border: none;
+  padding: 10px 40px;
+  border-radius: 20px;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
+  font-size: 13px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+}
+
+.white-pill-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+.white-pill-btn-small {
+  background: #ffffff;
+  color: #1A3080;
+  border: none;
+  padding: 6px 16px;
+  border-radius: 16px;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
+  font-size: 11px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}

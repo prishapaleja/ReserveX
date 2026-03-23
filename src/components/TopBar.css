@@ -1,19 +1,22 @@
 .topbar {
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin-bottom: 28px;
+  justify-content: space-between;
+  background: linear-gradient(90deg, #1C3386 0%, #15276D 100%);
+  backdrop-filter: blur(20px);
+  border-radius: 40px; 
+  padding: 8px 30px 8px 16px;
+  box-shadow: 0 6px 15px rgba(28, 51, 134, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  width: 100%;
 }
 
 .topbar-search {
-  flex: 1;
   display: flex;
   align-items: center;
-  background-color: rgba(255, 255, 255, 0.4);
-  border-radius: 12px;
-  padding: 10px 16px;
-  gap: 10px;
-  backdrop-filter: blur(8px);
+  gap: 12px;
+  flex: 1;
+  padding-left: 12px;
 }
 
 .topbar-search input {
@@ -21,63 +24,68 @@
   background: transparent;
   outline: none;
   font-size: 13px;
-  color: rgba(30, 50, 120, 0.8);
+  color: #A7BAEF;
   font-family: 'Courier New', Courier, monospace;
-  flex: 1;
+  width: 100%;
 }
 
 .topbar-search input::placeholder {
-  color: rgba(30, 50, 120, 0.5);
+  color: rgba(140, 158, 214, 0.6);
 }
 
-.topbar-icon-btn {
-  width: 42px;
-  height: 42px;
-  background-color: rgba(255, 255, 255, 0.4);
-  border-radius: 12px;
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.topbar-bell {
+  background: transparent;
+  border: none;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  backdrop-filter: blur(8px);
-  border: none;
-  flex-shrink: 0;
+  padding: 0;
 }
 
-.topbar-icon-btn:hover {
-  background-color: rgba(255, 255, 255, 0.6);
+.topbar-bell:hover svg {
+  stroke: #ffffff;
 }
 
 .topbar-profile {
   display: flex;
   align-items: center;
-  gap: 10px;
-  background-color: rgba(255, 255, 255, 0.4);
-  border-radius: 12px;
-  padding: 8px 14px;
-  backdrop-filter: blur(8px);
-  flex-shrink: 0;
+  gap: 12px;
 }
 
 .topbar-avatar {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
-  background-color: rgba(30, 50, 120, 0.3);
+  background-color: rgba(255, 255, 255, 0.15);
   display: flex;
   align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.topbar-user-info {
+  display: flex;
+  flex-direction: column;
   justify-content: center;
 }
 
 .topbar-name {
   font-size: 13px;
   font-weight: bold;
-  color: #0a1a4a;
+  color: #ffffff;
   font-family: 'Courier New', Courier, monospace;
 }
 
 .topbar-role {
-  font-size: 11px;
-  color: rgba(10, 26, 74, 0.6);
+  font-size: 10px;
+  color: #A7BAEF;
   font-family: 'Courier New', Courier, monospace;
+  margin-top: 2px;
 }

@@ -18,7 +18,13 @@ const Dashboard = () => {
       <Sidebar />
 
       <div className="main-content">
-        <TopBar userName="Prisha Paleja" userRole="Teacher" />
+        <div className="dashboard-logo">
+          <img src="/reservex_logo.svg" alt="ReserveX Logo" style={{ height: '36px', width: 'auto' }} />
+        </div>
+
+        <div className="topbar-header">
+          <TopBar userName="Prisha Paleja" userRole="Teacher" />
+        </div>
 
         {/* Highlights */}
         <div className="highlights-section">
@@ -60,34 +66,28 @@ const Dashboard = () => {
         <div className="bottom-row">
 
           {/* Today's Timetable */}
-          <div>
+          <div className="dark-card-wrapper">
             <div className="timetable-header">
               <h2 className="section-title-sm">Today's Timetable</h2>
-              <div className="calendar-icon-box">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1e50b4" strokeWidth="2">
-                  <rect x="3" y="4" width="18" height="18" rx="2" />
-                  <line x1="16" y1="2" x2="16" y2="6" />
-                  <line x1="8" y1="2" x2="8" y2="6" />
-                  <line x1="3" y1="10" x2="21" y2="10" />
-                </svg>
-              </div>
             </div>
             <div className="dark-card">
-              {timetable.map((item, i) => (
-                <div key={i} className="timetable-row">
-                  <span className="timetable-time">{item.time}</span>
-                  <div>
-                    <div className="timetable-subject">{item.subject}</div>
-                    {item.location && <div className="timetable-location">{item.location}</div>}
+              <div className="timeline-container">
+                {timetable.map((item, i) => (
+                  <div key={i} className="timetable-row">
+                    <span className="timetable-time">{item.time}</span>
+                    <div className="timetable-details">
+                      <div className="timetable-subject">{item.subject}</div>
+                      {item.location && <div className="timetable-location">{item.location}</div>}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
 
           {/* Notifications */}
-          <div>
-            <h2 className="section-title">Notifications</h2>
+          <div className="dark-card-wrapper">
+            <h2 className="section-title-sm" style={{ marginBottom: '16px' }}>Notifications</h2>
             <div className="notifications-card">
               {Array.from({ length: 8 }).map((_, i) => (
                 <div key={i} className="notification-pill" />

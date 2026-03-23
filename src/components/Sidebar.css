@@ -1,63 +1,139 @@
-.sidebar {
-  width: 210px;
-  min-width: 210px;
-  background: linear-gradient(180deg, #0a1a4a 0%, #0d2060 40%, #0a1a4a 100%);
-  display: flex;
-  flex-direction: column;
-  padding: 32px 0;
-  min-height: 100vh;
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 26, 74, 0.4);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  pointer-events: none; /* Allows cursor to reach underlying content */
+  transition: opacity 0.4s ease, backdrop-filter 0.4s ease;
+  z-index: 900;
 }
 
-.sidebar-logo {
-  padding: 0 28px 40px;
-  color: #ffffff;
-  font-size: 24px;
-  font-family: Georgia, serif;
-  letter-spacing: 0.03em;
+.sidebar-overlay.active {
+  opacity: 1;
+  pointer-events: auto; /* traps cursor to register mouseLeave implicitly */
+}
+
+.sidebar-container {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  z-index: 1000;
+}
+
+.sidebar-hover-zone {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 40px; /* reduced significantly since we have a visual pull tab! */
+  height: 100vh;
+  z-index: 10;
+}
+
+.sidebar-pull-tab {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 80px;
+  background: rgba(26, 48, 128, 0.5); /* Glass pill tab */
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-left: none;
+  border-radius: 0 16px 16px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.8);
+  z-index: 11;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  cursor: pointer;
+  box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+}
+
+.sidebar-container.active .sidebar-pull-tab {
+  opacity: 0; /* hides when panel pulls out */
+  transform: translate(-100%, -50%);
+}
+
+.sidebar-panel-logo {
+  position: absolute;
+  top: 36px;
+  left: 40px;
+  z-index: 20;
+}
+
+.sidebar-panel-logo img {
+  filter: brightness(0) invert(1); /* makes dark SVG white to sit on dark blue gradient */
+}
+
+.sidebar-panel {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 260px;
+  height: 100vh;
+  background: linear-gradient(135deg, rgba(26, 48, 128, 0.85) 0%, rgba(16, 30, 80, 0.95) 100%); /* semi-transparent glass backdrop! */
+  backdrop-filter: blur(20px);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0 40px 40px 0;
+  transform: translateX(-100%);
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s ease;
+  z-index: 15;
+  padding-top: 110px;
+  padding-bottom: 32px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: none;
+}
+
+.sidebar-container.active .sidebar-panel {
+  transform: translateX(0);
+  box-shadow: 15px 0 40px rgba(10, 26, 74, 0.3);
 }
 
 .sidebar-main-nav {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  padding: 0 12px;
+  gap: 8px;
+  padding: 0 16px;
 }
 
 .sidebar-bottom-nav {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  padding: 0 12px;
+  gap: 8px;
+  padding: 0 16px;
 }
 
 .sidebar-btn {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 10px 16px;
-  border-radius: 8px;
+  gap: 16px;
+  padding: 12px 20px;
+  border-radius: 12px;
   border: none;
   cursor: pointer;
   background-color: transparent;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 14px;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 13px;
   font-family: 'Courier New', Courier, monospace;
   text-align: left;
   transition: all 0.2s;
-  border-left: 3px solid transparent;
   width: 100%;
+  border-left: 4px solid transparent; 
 }
 
 .sidebar-btn:hover {
-  background-color: rgba(100, 130, 230, 0.15);
-  color: rgba(255, 255, 255, 0.95);
+  color: #ffffff;
 }
 
 .sidebar-btn.active {
-  background-color: rgba(100, 130, 230, 0.3);
-  color: #7ba4ff;
-  border-left: 3px solid #5b7be8;
+  color: #15D0EC; 
+  border-left: 4px solid #15D0EC;
 }
 
 .sidebar-btn.danger {

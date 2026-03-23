@@ -2,166 +2,222 @@
   display: flex;
   min-height: 100vh;
   font-family: 'Courier New', Courier, monospace;
-  background-color: #b8c8e8;
+  background-color: #DDE8F8;
 }
 
 .main-content {
   flex: 1;
-  padding: 24px 28px;
+  padding: 40px; 
   overflow-y: auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Lets internal content stretch robustly */
+}
+
+/* Because the logo is an SVG, it's roughly 160px-200px wide. */
+.dashboard-logo {
+  position: absolute;
+  top: 36px;
+  left: 40px;
+  z-index: 5;
+}
+
+.topbar-header {
+  margin-left: 210px; /* leaves perfect deep pocket for the extra-wide SVG logo */
+  margin-bottom: 40px;
 }
 
 /* ===== SECTION TITLES ===== */
+.section-title, .section-title-sm {
+  font-size: 18px;
+  color: #1A3080;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+}
+
 .section-title {
-  font-size: 22px;
-  color: #0a1a4a;
   margin-bottom: 16px;
-  font-family: Georgia, serif;
-  font-weight: normal;
 }
 
 .section-title-sm {
-  font-size: 20px;
-  color: #0a1a4a;
-  font-family: Georgia, serif;
-  font-weight: normal;
   margin: 0;
 }
 
 /* ===== HIGHLIGHTS ===== */
 .highlights-section {
-  margin-bottom: 28px;
+  margin-bottom: 40px;
 }
 
 .highlights-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
+  gap: 30px; /* Added more gap to beautifully fill the grid */
 }
 
 .highlight-card {
-  background: linear-gradient(135deg, #1a3080 0%, #0d2060 100%);
-  border-radius: 16px;
-  padding: 20px 22px;
+  background: linear-gradient(135deg, #1f3689 0%, #12215a 100%);
+  backdrop-filter: blur(16px);
+  border-radius: 20px;
+  padding: 24px 28px;
   color: white;
+  box-shadow: 0 10px 30px rgba(21, 38, 104, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15); 
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 140px; /* Taller sizes for robust presence */
+  transition: transform 0.3s ease;
+}
+
+.highlight-card:hover {
+  transform: translateY(-4px); /* Slick premium hover effect */
 }
 
 .highlight-label {
   font-size: 13px;
-  opacity: 0.8;
+  color: #A7BAEF;
   margin-bottom: 12px;
-  font-family: 'Courier New', Courier, monospace;
 }
 
 .highlight-number {
-  font-size: 52px;
-  font-family: Georgia, serif;
-  font-weight: normal;
+  font-size: 48px;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: 400;
   line-height: 1;
+  color: #ffffff;
 }
 
 .highlight-time-row {
   font-size: 12px;
-  opacity: 0.7;
-  margin-bottom: 4px;
-  font-family: 'Courier New', Courier, monospace;
+  color: #ffffff;
+  margin-bottom: 6px;
+  display: flex;
+  gap: 8px;
 }
 
 .highlight-time {
-  margin-right: 6px;
-}
-
-.highlight-subject {
-  opacity: 0.9;
+  font-weight: bold;
 }
 
 .highlight-location {
   font-size: 11px;
-  opacity: 0.6;
-  font-family: 'Courier New', Courier, monospace;
+  color: #A7BAEF;
 }
 
 /* ===== BOTTOM ROW ===== */
 .bottom-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  gap: 40px;
+  flex: 1; /* Instructs the bottom row to expand and aggressively fill space */
+}
+
+/* Structural wrapper allowing internal flex filling */
+.dark-card-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%; 
 }
 
 .timetable-header {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
 
-.calendar-icon-box {
-  width: 28px;
-  height: 28px;
-  background-color: rgba(30, 80, 180, 0.3);
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+  /* removed calendar-icon-box */
 
 .dark-card {
-  background: linear-gradient(135deg, #1a3080 0%, #0d2060 100%);
-  border-radius: 16px;
-  padding: 20px 22px;
-  min-height: 380px;
+  background: linear-gradient(135deg, #1c3386 0%, #0f1d50 100%);
+  backdrop-filter: blur(16px);
+  border-radius: 24px;
+  padding: 34px 40px; 
+  box-shadow: 0 10px 40px rgba(15, 29, 80, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  flex: 1; /* Stretches the card vertically to match the wrapper height */
+  display: flex;
+  flex-direction: column;
 }
 
 /* ===== TIMETABLE ===== */
-.timetable-row {
+.timeline-container {
+  border-left: 2px solid rgba(255, 255, 255, 0.1);
+  padding-left: 28px;
   display: flex;
-  gap: 18px;
-  padding-bottom: 16px;
-  margin-bottom: 16px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-direction: column;
+  justify-content: space-between; /* distributes the timetable events evenly! */
+  flex: 1;
+  gap: 16px;
 }
 
-.timetable-row:last-child {
-  padding-bottom: 0;
-  margin-bottom: 0;
-  border-bottom: none;
+.timetable-row {
+  display: flex;
+  gap: 24px;
+  position: relative;
+}
+
+.timetable-row::before {
+  content: '';
+  position: absolute;
+  left: -32.5px; 
+  top: 4px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #A7BAEF;
+  box-shadow: 0 0 0 4px rgba(28, 51, 134, 0.5); /* Outer glow on the dots */
 }
 
 .timetable-time {
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.55);
-  min-width: 60px;
-  font-family: 'Courier New', Courier, monospace;
-  padding-top: 1px;
+  color: #ffffff;
+  min-width: 65px;
+  font-weight: bold;
+  margin-top: -1px;
+}
+
+.timetable-details {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .timetable-subject {
   font-size: 13px;
-  color: rgba(255, 255, 255, 0.9);
-  font-family: 'Courier New', Courier, monospace;
-  margin-bottom: 3px;
+  color: #ffffff;
 }
 
 .timetable-location {
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.45);
-  font-family: 'Courier New', Courier, monospace;
+  color: #A7BAEF;
 }
 
 /* ===== NOTIFICATIONS ===== */
 .notifications-card {
-  background: linear-gradient(135deg, #1a3080 0%, #0d2060 100%);
-  border-radius: 16px;
-  padding: 20px 22px;
-  min-height: 380px;
+  background: linear-gradient(135deg, #1c3386 0%, #0f1d50 100%);
+  backdrop-filter: blur(16px);
+  border-radius: 24px;
+  padding: 34px 40px;
+  box-shadow: 0 10px 40px rgba(15, 29, 80, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  flex: 1; /* Stretches the card completely down! */
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 20px; /* robust spacing inside */
 }
 
 .notification-pill {
-  background-color: rgba(100, 130, 210, 0.25);
-  border-radius: 10px;
-  height: 38px;
-  flex: 0 0 38px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+  border-radius: 12px;
+  flex: 1; /* Stretches vertically filling empty space beautifully */
+  max-height: 48px; 
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: background 0.2s ease;
+}
+
+.notification-pill:hover {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%);
 }
