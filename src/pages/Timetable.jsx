@@ -239,7 +239,7 @@ const Timetable = () => {
     try {
       await api.delete(`/timetable/${id}`);
       setEntries((prev) => prev.filter((e) => e.id !== id));
-    } catch (err) {
+    } catch {
       alert('Failed to delete entry.');
     }
   };

@@ -172,7 +172,10 @@ const Communication = () => {
   };
 
   useEffect(() => {
-    fetchChannels();
+    const loadChannels = async () => {
+      await fetchChannels();
+    };
+    loadChannels();
   }, []);
 
   useEffect(() => {

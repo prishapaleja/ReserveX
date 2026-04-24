@@ -8,35 +8,55 @@ import AdminControl from './pages/AdminControl';
 import Communication from './pages/Communication';
 import Timetable from './pages/Timetable';
 import useAuthStore from './store/authStore.js';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 const ProtectedRoute = ({ children, allowedRoles }) => {
   const user = useAuthStore((state) => state.user);
 
-  if ((!user) || !allowedRoles.includes(user.role)) {
-    return <Navigate to="/login" replace />
+  if (!user || (allowedRoles && !allowedRoles.includes(user.role))) {
+    return <Navigate to="/login" replace />;
   }
   return children;
-}
+};
+
+const GuestRoute = ({ children }) => {
+  const user = useAuthStore((state) => state.user);
+  if (user) return <Navigate to="/dashboard" replace />;
+  return children;
+};
+
 function App() {
   const checkAuth = useAuthStore(state => state.checkAuth);
+  const [isChecking, setIsChecking] = useState(true);
+
   useEffect(() => {
-    checkAuth();
+    checkAuth().finally(() => setIsChecking(false));
   }, [checkAuth]);
+
+  if (isChecking) {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', background: '#EAEFF7' }}>
+        <div style={{ width: 40, height: 40, border: '4px solid #232051', borderTop: '4px solid transparent', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      </div>
+    );
+  }
+
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/approvals" element={<Approvals />} />
-        <Route path="/rooms" element={<Rooms />} />
-        <Route path="/academic" element={<Academic />} />
+        <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />
+        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+        <Route path="/approvals" element={<ProtectedRoute><Approvals /></ProtectedRoute>} />
+        <Route path="/rooms" element={<ProtectedRoute><Rooms /></ProtectedRoute>} />
+        <Route path="/academic" element={<ProtectedRoute><Academic /></ProtectedRoute>} />
         <Route path="/admin-control" element={
           <ProtectedRoute allowedRoles={['ADMIN']}>
             <AdminControl />
           </ProtectedRoute>} />
-        <Route path="/communication" element={<Communication />} />
-        <Route path="/timetable" element={<Timetable />} />
-        {/* Redirect unknown routes to login for now */}
+        <Route path="/communication" element={<ProtectedRoute><Communication /></ProtectedRoute>} />
+        <Route path="/timetable" element={<ProtectedRoute><Timetable /></ProtectedRoute>} />
+        {/* Redirect root and unknown routes */}
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </BrowserRouter>

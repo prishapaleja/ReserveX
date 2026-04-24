@@ -77,13 +77,15 @@ const Dashboard = () => {
   const [peakHours, setPeakHours] = useState([]);
   const [deptUsage, setDeptUsage] = useState([]);
   const [eventFrequency, setEventFrequency] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [_loading, setLoading] = useState(true);
   const { user } = useAuthStore();
 
   // Heatmap data — live from room-utilization API
   const [heatRooms, setHeatRooms] = useState([]);
   const [heatSlots, setHeatSlots] = useState(['8 AM','9 AM','10 AM','11 AM','12 PM','1 PM','2 PM','3 PM','4 PM','5 PM']);
   const [utilizationMatrix, setUtilizationMatrix] = useState(Array(10).fill(0).map(() => Array(8).fill(0)));
+
+  const timeSlots = ['8 AM','9 AM','10 AM','11 AM','12 PM','1 PM','2 PM','3 PM','4 PM','5 PM'];
 
 
   useEffect(() => {
@@ -113,7 +115,7 @@ const Dashboard = () => {
         ]);
 
         // 1. Overview Stats
-        const { usersCount, roomsCount, bookingsCount, eventsCount } = overviewRes.data;
+        const { usersCount, roomsCount, bookingsCount } = overviewRes.data;
         const pendingCount = approvalStatsRes.data?.pending ?? 0;
         setStats([
           { label: 'Total Users', value: usersCount.toLocaleString(), delta: 'System-wide', deltaColor: '#3658C9', icon: 'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z' },
@@ -184,7 +186,7 @@ const Dashboard = () => {
     };
 
     fetchDashboardData();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="flex min-h-screen bg-[#EAEFF7] font-manrope selection:bg-[#232051] selection:text-white">

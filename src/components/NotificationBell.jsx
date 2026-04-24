@@ -12,7 +12,7 @@ const NotificationBell = () => {
       setLoading(true);
       const res = await api.get('/notifications');
       setNotifications(res.data || []);
-    } catch (err) {
+    } catch {
       // Silently fail — not critical
     } finally {
       setLoading(false);

@@ -20,7 +20,7 @@ const useAuthStore = create((set) => ({
         try {
             const response = await api.get('/auth/me');
             set({ user: response.data });
-        } catch (error) {
+        } catch {
             set({ user: null, token: null });
         }
     },
