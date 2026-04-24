@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import NotificationBell from '../components/NotificationBell';
 import api from '../api/axios';
@@ -188,6 +189,7 @@ const BroadcastModal = ({ onClose }) => {
 const AdminControl = () => {
   const [showLockModal, setShowLockModal]           = useState(false);
   const [showBroadcastModal, setShowBroadcastModal] = useState(false);
+  const [searchParams] = useSearchParams();
 
   const [roomLocks, setRoomLocks]                   = useState([]);
   const [auditLogs, setAuditLogs]                   = useState([]);
@@ -218,6 +220,11 @@ const AdminControl = () => {
   };
 
   useEffect(() => { fetchData(); }, []);
+  useEffect(() => {
+    if (searchParams.get('broadcast') === '1') {
+      setShowBroadcastModal(true);
+    }
+  }, [searchParams]);
 
   // ─── Unlock room ─────────────────────────────────────────────────────────
   const handleUnlock = async (lockId) => {
@@ -321,7 +328,7 @@ const AdminControl = () => {
                   <div key={r.id} className={`grid grid-cols-[2.5fr_3fr_2fr_1.5fr_1fr] gap-4 items-center px-10 py-6 hover:bg-[#F9FAFC] transition-colors ${i < roomLocks.length - 1 ? 'border-b border-[#F4F5F8]' : ''}`}>
                     <div className="flex items-center gap-3">
                       <div className="w-2 h-2 rounded-full bg-[#D9534F] shrink-0" />
-                      <span className="text-[#232051] font-bold text-[14px]">{r.room?.name || r.roomId}</span>
+                      <span className="text-[#232051] font-bold text-[14px]">{r.name || r.room?.name || r.roomId}</span>
                     </div>
                     <span className="text-[#848795] text-[13px] font-medium italic">{r.reason}</span>
                     <span className="text-[#6D7184] text-[13px] font-medium">{r.admin?.name || r.admin?.email || 'Admin'}</span>

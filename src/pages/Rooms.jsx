@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import NotificationBell from '../components/NotificationBell';
 import api from '../api/axios';
@@ -115,9 +116,14 @@ const Rooms = () => {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editingRoom, setEditingRoom] = useState(null);
-  const [searchId, setSearchId] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [floorFilter, setFloorFilter] = useState('ALL');
+  const [roomTypeFilter, setRoomTypeFilter] = useState('ALL');
+  const [capacityFilter, setCapacityFilter] = useState('ALL');
   const [showBookModal, setShowBookModal] = useState(false);
   const [bookingRoom, setBookingRoom] = useState(null);
+  const [searchParams] = useSearchParams();
+  const [quickBookTriggered, setQuickBookTriggered] = useState(false);
   const [bookForm, setBookForm] = useState({ purpose: '', startTime: '', endTime: '' });
   const [bookingSubmitting, setBookingSubmitting] = useState(false);
 
@@ -153,39 +159,71 @@ const Rooms = () => {
     }
   }, []);
 
-  const handleSearchRoom = async () => {
-    if (!searchId.trim()) return; // Do nothing if empty
-
-    try {
-      setLoading(true);
-      // NOTE: In the future, we can scan a QR code holding the Room ID 
-      // and automatically trigger this function with that ID!
-      const response = await api.get(`/rooms/${searchId}`);
-
-      const room = response.data;
-      setRoomsData([{
-        id: room.id,
-        name: room.name,
-        building: room.departmentId || 'Search Result',
-        floor: "N/A",
-        capacity: `${room.capacity} SEATS`,
-        status: room.isOperational ? "AVAILABLE" : "MAINTENANCE",
-        statusColor: room.isOperational ? "text-[#2E7D32]" : "text-[#C62828]",
-        statusDot: room.isOperational ? "bg-[#4CAF50]" : "bg-[#F44336]",
-        capacityIcon: <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 00-3-3.87"></path><path d="M16 3.13a4 4 0 010 7.75"></path></svg>,
-        actionIcon: "edit"
-      }]);
-    } catch (error) {
-      console.error("Room not found:", error);
-      alert("Room ID not found!");
-    } finally {
-      setLoading(false);
-    }
+  const handleSearchRoom = () => {
+    // Search is integrated in real time using filters below.
   };
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
+  // const filteredRooms = roomsData.filter((room) => {
+  //   const query = searchQuery.trim().toLowerCase();
+  //   if (query && !(
+  //     room.name?.toLowerCase().includes(query) ||
+  //     room.id?.toLowerCase().includes(query) ||
+  //     room.building?.toLowerCase().includes(query) ||
+  //     room.roomType?.toLowerCase().includes(query)
+  //   )) {
+  //     return false;
+  //   }
+
+  //   if (floorFilter !== 'ALL' && room.building !== floorFilter) {
+  //     return false;
+  //   }
+
+  //   if (roomTypeFilter !== 'ALL' && room.roomType !== roomTypeFilter) {
+  //     return false;
+  //   }
+
+  //   if (capacityFilter !== 'ALL') {
+  //     const cap = parseInt(room.capacity, 10) || 0;
+  //     if (capacityFilter === 'LESS_30' && cap > 30) return false;
+  //     if (capacityFilter === 'BETWEEN_31_60' && (cap < 31 || cap > 60)) return false;
+  //     if (capacityFilter === 'GREATER_60' && cap <= 60) return false;
+  //   }
+
+  //   return true;
+  // });
+
+  const filteredRooms = roomsData.filter((room) => {
+    const query = searchQuery.trim().toLowerCase();
+    if (query && !(
+      room.name?.toLowerCase().includes(query) ||
+      room.id?.toLowerCase().includes(query) ||
+      room.building?.toLowerCase().includes(query) ||
+      room.roomType?.toLowerCase().includes(query)
+    )) {
+      return false;
+    }
+
+    if (floorFilter !== 'ALL' && room.building !== floorFilter) {
+      return false;
+    }
+
+    if (roomTypeFilter !== 'ALL' && room.roomType !== roomTypeFilter) {
+      return false;
+    }
+
+    if (capacityFilter !== 'ALL') {
+      const cap = parseInt(room.capacity, 10) || 0;
+      if (capacityFilter === 'LESS_30' && cap > 30) return false;
+      if (capacityFilter === 'BETWEEN_31_60' && (cap < 31 || cap > 60)) return false;
+      if (capacityFilter === 'GREATER_60' && cap <= 60) return false;
+    }
+
+    return true;
+  });
 
   const handleEditClick = (room) => {
     setEditingRoom(room.id);
@@ -248,6 +286,20 @@ const Rooms = () => {
     }
   }
   useEffect(() => { fetchRooms(); }, [fetchRooms]);
+
+  useEffect(() => {
+    if (quickBookTriggered) return;
+    if (searchParams.get('quick') !== 'book') return;
+    if (!roomsData.length) return;
+
+    const roomToBook = roomsData.find((room) => room.status === 'AVAILABLE') || roomsData[0];
+    if (roomToBook) {
+      setBookingRoom(roomToBook);
+      setShowBookModal(true);
+      setQuickBookTriggered(true);
+    }
+  }, [quickBookTriggered, searchParams, roomsData]);
+
   return (
     <div className="flex min-h-screen bg-[#EAEFF7] font-manrope selection:bg-[#232051] selection:text-white">
       <Sidebar />
@@ -292,10 +344,10 @@ const Rooms = () => {
             </svg>
             <input
               type="text"
-              value={searchId}
-              onChange={(e) => setSearchId(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleSearchRoom()}
-              placeholder="Search rooms by ID and press Enter... (QR Ready)"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Enter') e.preventDefault(); }}
+              placeholder="Search rooms by name, ID, building or type"
               className="w-full h-[48px] bg-[#F4F5F8] rounded-[12px] pl-[42px] pr-5 text-[14px] text-[#232051] font-semibold placeholder-[#A5A8B6] focus:outline-none focus:bg-[#EAEFF7] transition-colors"
             />
           </div>
@@ -312,8 +364,15 @@ const Rooms = () => {
           </button>
 
           <div className="relative">
-            <select className="appearance-none w-[130px] h-[48px] bg-[#F4F5F8] rounded-[12px] px-4 text-[13px] font-[800] text-[#232051] cursor-pointer focus:outline-none focus:bg-[#EAEFF7] transition-colors">
-              <option>All Floors</option>
+            <select
+              value={floorFilter}
+              onChange={(e) => setFloorFilter(e.target.value)}
+              className="appearance-none w-[130px] h-[48px] bg-[#F4F5F8] rounded-[12px] px-4 text-[13px] font-[800] text-[#232051] cursor-pointer focus:outline-none focus:bg-[#EAEFF7] transition-colors"
+            >
+              <option value="ALL">All Floors</option>
+              {[...new Set(roomsData.map(room => room.building))].map((building) => (
+                <option key={building} value={building}>{building}</option>
+              ))}
             </select>
             <svg className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none w-3 h-3 text-[#A5A8B6]" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
               <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
@@ -321,8 +380,15 @@ const Rooms = () => {
           </div>
 
           <div className="relative">
-            <select className="appearance-none w-[130px] h-[48px] bg-[#F4F5F8] rounded-[12px] px-4 text-[13px] font-[800] text-[#232051] cursor-pointer focus:outline-none focus:bg-[#EAEFF7] transition-colors">
-              <option>Room Type</option>
+            <select
+              value={roomTypeFilter}
+              onChange={(e) => setRoomTypeFilter(e.target.value)}
+              className="appearance-none w-[130px] h-[48px] bg-[#F4F5F8] rounded-[12px] px-4 text-[13px] font-[800] text-[#232051] cursor-pointer focus:outline-none focus:bg-[#EAEFF7] transition-colors"
+            >
+              <option value="ALL">Room Type</option>
+              <option value="CLASS">Classroom</option>
+              <option value="LAB">Laboratory</option>
+              <option value="HALL">Seminar Hall</option>
             </select>
             <svg className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none w-3 h-3 text-[#A5A8B6]" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
               <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
@@ -330,8 +396,15 @@ const Rooms = () => {
           </div>
 
           <div className="relative">
-            <select className="appearance-none w-[130px] h-[48px] bg-[#F4F5F8] rounded-[12px] px-4 text-[13px] font-[800] text-[#232051] cursor-pointer focus:outline-none focus:bg-[#EAEFF7] transition-colors">
-              <option>Capacity</option>
+            <select
+              value={capacityFilter}
+              onChange={(e) => setCapacityFilter(e.target.value)}
+              className="appearance-none w-[130px] h-[48px] bg-[#F4F5F8] rounded-[12px] px-4 text-[13px] font-[800] text-[#232051] cursor-pointer focus:outline-none focus:bg-[#EAEFF7] transition-colors"
+            >
+              <option value="ALL">Capacity</option>
+              <option value="LESS_30">Up to 30</option>
+              <option value="BETWEEN_31_60">31-60</option>
+              <option value="GREATER_60">60+</option>
             </select>
             <svg className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none w-3 h-3 text-[#A5A8B6]" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
               <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
@@ -349,10 +422,10 @@ const Rooms = () => {
         <div className="grid grid-cols-3 gap-6 mb-8">
           {loading ? (
             <div className="col-span-3 py-20 text-center font-bold text-[#848795]">Loading Rooms...</div>
-          ) : roomsData.length === 0 ? (
+          ) : filteredRooms.length === 0 ? (
             <div className="col-span-3 py-20 text-center font-bold text-[#848795]">No Rooms Found in Database.</div>
           ) : (
-            roomsData.map((room) => (
+            filteredRooms.map((room) => (
               <div key={room.id} className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all border border-transparent hover:border-[#EAEFF7] flex flex-col">
 
                 {/* Card Image Area Placeholder */}
@@ -415,7 +488,7 @@ const Rooms = () => {
 
         {/* Footer Pagination */}
         <div className="flex items-center justify-between pb-8">
-          <p className="text-[13px] font-semibold text-[#848795]">Showing {roomsData.length} rooms across campus.</p>
+          <p className="text-[13px] font-semibold text-[#848795]">Showing {filteredRooms.length} rooms across campus.</p>
 
           <div className="flex items-center gap-2">
             <button className="w-8 h-8 flex items-center justify-center text-[#848795] opacity-50 cursor-not-allowed transition-colors">

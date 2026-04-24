@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import NotificationBell from '../components/NotificationBell';
 import api from '../api/axios';
@@ -84,9 +85,22 @@ const Dashboard = () => {
   const [heatRooms, setHeatRooms] = useState([]);
   const [heatSlots, setHeatSlots] = useState(['8 AM','9 AM','10 AM','11 AM','12 PM','1 PM','2 PM','3 PM','4 PM','5 PM']);
   const [utilizationMatrix, setUtilizationMatrix] = useState(Array(10).fill(0).map(() => Array(8).fill(0)));
+  const navigate = useNavigate();
 
   const timeSlots = ['8 AM','9 AM','10 AM','11 AM','12 PM','1 PM','2 PM','3 PM','4 PM','5 PM'];
 
+
+  const handleQuickRoomBooking = () => {
+    navigate('/rooms?quick=book');
+  };
+
+  const handleSecondaryQuickAction = () => {
+    if (user?.role === 'ADMIN') {
+      navigate('/admin-control?broadcast=1');
+    } else {
+      navigate('/timetable');
+    }
+  };
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -316,13 +330,13 @@ const Dashboard = () => {
             <div className="bg-white rounded-[2rem] p-8 shadow-sm">
               <h4 className="text-[10px] font-[800] text-[#A5A8B6] uppercase tracking-[0.15em] mb-6">Quick Actions</h4>
               <div className="flex flex-col gap-3">
-                <button className="w-full bg-[#232051] hover:bg-[#343568] transition-colors rounded-2xl h-[54px] flex items-center px-5 gap-3 text-white shadow-md active:scale-[0.99]">
+                <button onClick={handleQuickRoomBooking} className="w-full bg-[#232051] hover:bg-[#343568] transition-colors rounded-2xl h-[54px] flex items-center px-5 gap-3 text-white shadow-md active:scale-[0.99]">
                   <div className="w-7 h-7 rounded-full border border-white/20 flex items-center justify-center">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14M5 12h14"/></svg>
                   </div>
                   <span className="font-bold text-[13px]">Quick Room Booking</span>
                 </button>
-                <button className="w-full bg-[#EAEFF7] hover:bg-[#DCE4F0] transition-colors rounded-2xl h-[54px] flex items-center px-5 gap-3 text-[#232051] active:scale-[0.99]">
+                <button onClick={handleSecondaryQuickAction} className="w-full bg-[#EAEFF7] hover:bg-[#DCE4F0] transition-colors rounded-2xl h-[54px] flex items-center px-5 gap-3 text-[#232051] active:scale-[0.99]">
                   <div className="w-7 h-7 rounded-full bg-white flex items-center justify-center shrink-0">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                       <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
