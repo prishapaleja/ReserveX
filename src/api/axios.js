@@ -1,7 +1,7 @@
 import axios from 'axios';
 const api = axios.create({
-    baseURL: 'https://reservex.onrender.com/api',
-    // baseURL: 'http://localhost:5000/api',
+    //baseURL: 'https://reservex.onrender.com/api',
+     baseURL: 'http://localhost:5000/api',
     withCredentials: true, // IMPORTANT: Allows sending/receiving cookies
 });
 

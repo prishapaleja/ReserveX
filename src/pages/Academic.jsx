@@ -71,6 +71,7 @@ const Academic = () => {
 
   // Form state
   const [form, setForm] = useState({});
+  const [selectedItem, setSelectedItem] = useState(null);
 
   const tabs = [
     { id: 'departments', label: 'Departments', icon: '🏛️' },
@@ -115,7 +116,21 @@ const Academic = () => {
 
   // ─── Open modal with fresh form ───────────────────────────────────────────
   const handleOpenModal = () => {
+    setSelectedItem(null);
     setForm({});
+    setShowModal(true);
+  };
+
+  const handleEdit = (item) => {
+    setSelectedItem(item);
+    setForm({
+      name: item.name || '',
+      code: item.code || '',
+      startDate: item.startDate ? item.startDate.split('T')[0] : '',
+      endDate: item.endDate ? item.endDate.split('T')[0] : '',
+      departmentId: item.departmentId || item.department?.id || '',
+      semesterId: item.semesterId || item.semester?.id || '',
+    });
     setShowModal(true);
   };
 
@@ -123,38 +138,68 @@ const Academic = () => {
   const handleSubmit = async () => {
     setSubmitting(true);
     try {
+      const isEdit = Boolean(selectedItem?.id);
       switch (activeTab) {
         case 'departments':
-          await api.post('/academic/departments', { name: form.name });
+          if (isEdit) {
+            await api.patch(`/academic/departments/${selectedItem.id}`, { name: form.name });
+          } else {
+            await api.post('/academic/departments', { name: form.name });
+          }
           break;
         case 'semesters':
-          await api.post('/academic/semesters', {
-            name: form.name,
-            startDate: form.startDate,
-            endDate: form.endDate,
-          });
+          if (isEdit) {
+            await api.patch(`/academic/semesters/${selectedItem.id}`, {
+              name: form.name,
+              startDate: form.startDate,
+              endDate: form.endDate,
+            });
+          } else {
+            await api.post('/academic/semesters', {
+              name: form.name,
+              startDate: form.startDate,
+              endDate: form.endDate,
+            });
+          }
           break;
         case 'classes':
-          await api.post('/academic/classes', {
-            name: form.name,
-            departmentId: form.departmentId,
-          });
+          if (isEdit) {
+            await api.patch(`/academic/classes/${selectedItem.id}`, {
+              name: form.name,
+              departmentId: form.departmentId,
+            });
+          } else {
+            await api.post('/academic/classes', {
+              name: form.name,
+              departmentId: form.departmentId,
+            });
+          }
           break;
         case 'subjects':
-          await api.post('/academic/subjects', {
-            code: form.code,
-            name: form.name,
-            departmentId: form.departmentId,
-            semesterId: form.semesterId,
-          });
+          if (isEdit) {
+            await api.patch(`/academic/subjects/${selectedItem.id}`, {
+              code: form.code,
+              name: form.name,
+              departmentId: form.departmentId,
+              semesterId: form.semesterId,
+            });
+          } else {
+            await api.post('/academic/subjects', {
+              code: form.code,
+              name: form.name,
+              departmentId: form.departmentId,
+              semesterId: form.semesterId,
+            });
+          }
           break;
         default:
           break;
       }
       setShowModal(false);
+      setSelectedItem(null);
       fetchAll();
     } catch (err) {
-      console.error('Failed to create entity:', err);
+      console.error('Failed to save entity:', err);
       alert(err.response?.data?.message || 'Failed to save. Please try again.');
     } finally {
       setSubmitting(false);
@@ -166,10 +211,25 @@ const Academic = () => {
     const entityName = activeTab.slice(0, -1);
     if (!window.confirm(`Are you sure you want to delete this ${entityName}? This cannot be undone.`)) return;
     try {
-      if (activeTab === 'departments') await api.delete(`/academic/departments/${id}`);
-      // Semesters/classes/subjects backend may not have delete — handle gracefully
-      await fetchAll();
+      switch (activeTab) {
+        case 'departments':
+          await api.delete(`/academic/departments/${id}`);
+          break;
+        case 'semesters':
+          await api.delete(`/academic/semesters/${id}`);
+          break;
+        case 'classes':
+          await api.delete(`/academic/classes/${id}`);
+          break;
+        case 'subjects':
+          await api.delete(`/academic/subjects/${id}`);
+          break;
+        default:
+          break;
+      }
+      fetchAll();
     } catch (err) {
+      console.error('Failed to delete entity:', err);
       alert(err.response?.data?.error || 'Failed to delete. It may be referenced by other records.');
     }
   };
@@ -338,14 +398,20 @@ const Academic = () => {
                         </span>
                       </td>
                       <td className="py-5 px-4 text-right">
-                        {activeTab === 'departments' && (
+                        <div className="flex justify-end gap-2">
+                          <button
+                            onClick={() => handleEdit(item)}
+                            className="opacity-0 group-hover:opacity-100 transition-opacity px-3 py-1.5 rounded-lg text-[11px] font-bold text-[#3658C9] hover:bg-[#D6E1FA] border border-[#3658C9]/20"
+                          >
+                            Edit
+                          </button>
                           <button
                             onClick={() => handleDelete(item.id)}
                             className="opacity-0 group-hover:opacity-100 transition-opacity px-3 py-1.5 rounded-lg text-[11px] font-bold text-[#D9534F] hover:bg-[#D9534F]/10 border border-[#D9534F]/30"
                           >
                             Delete
                           </button>
-                        )}
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -358,11 +424,14 @@ const Academic = () => {
 
       {showModal && (
         <Modal
-          title={`Add ${activeTab.slice(0, -1)}`}
-          subtitle={`Fill in the details to create a new ${activeTab.slice(0, -1)}.`}
-          onClose={() => setShowModal(false)}
+          title={`${selectedItem ? 'Edit' : 'Add'} ${activeTab.slice(0, -1)}`}
+          subtitle={`${selectedItem ? 'Update the details below.' : `Fill in the details to create a new ${activeTab.slice(0, -1)}.`}`}
+          onClose={() => {
+            setShowModal(false);
+            setSelectedItem(null);
+          }}
           onSubmit={handleSubmit}
-          submitLabel={submitting ? 'Saving...' : 'Save'}
+          submitLabel={submitting ? 'Saving...' : selectedItem ? 'Update' : 'Save'}
         >
           {renderModalContent()}
         </Modal>
