@@ -97,6 +97,7 @@ const LockRoomModal = ({ rooms, onClose, onSuccess }) => {
 const BroadcastModal = ({ onClose }) => {
   const [message, setMessage] = useState('');
   const [type, setType] = useState('EMERGENCY');
+  const [scope, setScope] = useState('GLOBAL');
   const [submitting, setSubmitting] = useState(false);
   const [sent, setSent] = useState(false);
 
@@ -104,7 +105,10 @@ const BroadcastModal = ({ onClose }) => {
     if (!message.trim()) return alert('Please enter a broadcast message.');
     setSubmitting(true);
     try {
-      await api.post('/admin/override/broadcast', { message, type });
+      const endpoint = scope === 'DEPARTMENT'
+        ? '/admin/override/broadcast-department'
+        : '/admin/override/broadcast';
+      await api.post(endpoint, { message, type });
       setSent(true);
       setTimeout(onClose, 2000);
     } catch (err) {
@@ -130,17 +134,30 @@ const BroadcastModal = ({ onClose }) => {
           </div>
         ) : (
           <>
-            <span className="text-[10px] font-[800] text-[#D9534F] uppercase tracking-widest">Emergency Action</span>
-            <h3 className="text-[#232051] text-[24px] font-bold mb-1 mt-1">Emergency Broadcast</h3>
-            <p className="text-[#848795] text-[14px] font-medium mb-8">Send an instant announcement to all connected users on campus.</p>
+            <span className="text-[10px] font-[800] text-[#D9534F] uppercase tracking-widest">Admin Broadcast</span>
+            <h3 className="text-[#232051] text-[24px] font-bold mb-1 mt-1">{scope === 'DEPARTMENT' ? 'Department Broadcast' : 'Emergency Broadcast'}</h3>
+            <p className="text-[#848795] text-[14px] font-medium mb-8">
+              {scope === 'DEPARTMENT'
+                ? 'Send a notification to everyone in your department.'
+                : 'Send an instant announcement to all connected users on campus.'}
+            </p>
             <div className="flex flex-col gap-5">
-              <div className="flex flex-col gap-2">
-                <label className="text-[10px] font-bold text-[#848795] uppercase tracking-wider ml-1">Broadcast Type</label>
-                <select value={type} onChange={(e) => setType(e.target.value)} className="w-full h-[54px] bg-[#F4F5F8] rounded-2xl px-5 text-[15px] text-[#232051] font-bold outline-none appearance-none">
-                  <option value="EMERGENCY">🚨 Emergency</option>
-                  <option value="ANNOUNCEMENT">📢 General Announcement</option>
-                  <option value="MAINTENANCE">🔧 Maintenance Notice</option>
-                </select>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col gap-2">
+                  <label className="text-[10px] font-bold text-[#848795] uppercase tracking-wider ml-1">Broadcast Scope</label>
+                  <select value={scope} onChange={(e) => setScope(e.target.value)} className="w-full h-[54px] bg-[#F4F5F8] rounded-2xl px-5 text-[15px] text-[#232051] font-bold outline-none appearance-none">
+                    <option value="GLOBAL">Campus-wide</option>
+                    <option value="DEPARTMENT">Department-only</option>
+                  </select>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label className="text-[10px] font-bold text-[#848795] uppercase tracking-wider ml-1">Broadcast Type</label>
+                  <select value={type} onChange={(e) => setType(e.target.value)} className="w-full h-[54px] bg-[#F4F5F8] rounded-2xl px-5 text-[15px] text-[#232051] font-bold outline-none appearance-none">
+                    <option value="EMERGENCY">🚨 Emergency</option>
+                    <option value="ANNOUNCEMENT">📢 General Announcement</option>
+                    <option value="MAINTENANCE">🔧 Maintenance Notice</option>
+                  </select>
+                </div>
               </div>
               <div className="flex flex-col gap-2">
                 <label className="text-[10px] font-bold text-[#848795] uppercase tracking-wider ml-1">Message</label>

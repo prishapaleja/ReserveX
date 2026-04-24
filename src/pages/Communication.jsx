@@ -18,22 +18,28 @@ const initials = (name) => {
 
 // ─── Create Channel Modal ─────────────────────────────────
 
-const CreateChannelModal = ({ onClose, onSuccess }) => {
+const CreateChannelModal = ({ onClose, onSuccess, departmentId }) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
 
   const handleSubmit = async () => {
     if (!name.trim()) return;
+    if (!departmentId) {
+      alert('Unable to create channel because your account is not assigned to a department.');
+      return;
+    }
+
     try {
       await api.post('/social/clubs', {
         name,
         description,
-        departmentId: "d9e87f..." // Replace with a real department UUID when testing!
+        departmentId
       });
-      onSuccess(); 
+      onSuccess();
       onClose();
     } catch (error) {
-      console.error("Failed to create channel:", error);
+      console.error('Failed to create channel:', error);
+      alert(error.response?.data?.error || 'Failed to create channel.');
     }
   };
 
@@ -252,13 +258,13 @@ const Communication = () => {
               <button
                 key={ch.id}
                 onClick={() => setActiveChannel(ch)}
-                className={`w-full text-left px-7 py-5 transition-all hover:bg-[#F9FAFC] flex items-start gap-4 relative ${activeChannel.id === ch.id ? 'bg-[#EAEFF7]' : ''}`}
+                className={`w-full text-left px-7 py-5 transition-all hover:bg-[#F9FAFC] flex items-start gap-4 relative ${activeChannel?.id === ch.id ? 'bg-[#EAEFF7]' : ''}`}
               >
-                {activeChannel.id === ch.id && (
+                {activeChannel?.id === ch.id && (
                   <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-[40px] bg-[#232051] rounded-r-full"></div>
                 )}
                 {/* Icon */}
-                <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 text-[15px] font-bold mt-0.5 ${activeChannel.id === ch.id ? 'bg-[#232051] text-white' : 'bg-[#F4F5F8] text-[#232051]'}`}>
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 text-[15px] font-bold mt-0.5 ${activeChannel?.id === ch.id ? 'bg-[#232051] text-white' : 'bg-[#F4F5F8] text-[#232051]'}`}>
                   #
                 </div>
                 <div className="flex-1 min-w-0">
@@ -399,7 +405,7 @@ const Communication = () => {
         </div>
       </div>
 
-      {showModal && <CreateChannelModal onClose={() => setShowModal(false)} onSuccess={fetchChannels} />}
+      {showModal && <CreateChannelModal onClose={() => setShowModal(false)} onSuccess={fetchChannels} departmentId={user?.departmentId} />}
       {showAddMember && (
         <AddMemberModal
           onClose={() => setShowAddMember(false)}
